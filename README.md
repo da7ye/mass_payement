@@ -1,14 +1,14 @@
 # mass_payement
 Microservice de Paiements de Masse pour Next.mr
 
-<!-- TODO: -->
+    TODO:
     -> The recipients in the GET /api/mass-payments/ isnt showin
     ->  Done but dont know how yet! (When doing a mass payment its no getting the ammount out of the initiator's account)
     -> didnt do the payement templates yet!
 
     -> if you have time try using postgres instead of sqlite
 
-<!-- DONE -->
+    DONE:
     ->The status of the recipiants in the POST /api/mass-payments/ endpoint still say pending when it should be saying succeess
     -> There is a endpoint for mass payement GET /api/mass-payments/ but there isnt one for each MassPayment like GET /api/mass-payments/{id}/
     -> Liste des Paiements de Masse d'un Utilisateur GET /api/accounts/{account_number}/mass-payments
@@ -17,7 +17,7 @@ Microservice de Paiements de Masse pour Next.mr
 
 
 
-<!-- NOTES: -->
+NOTES:
     ---------------------------------------------------------1-----------------------------------------------------------------------------------------
     ?: in the 'GET /api/mass-payments/' showing the status as completed but int the 'POST /api/mass-payments/ RESPONSE' showing processing.
     RESPONSE:
@@ -38,6 +38,7 @@ Microservice de Paiements de Masse pour Next.mr
 
 
 API ENDPOINTS:
+
     User Endpoints:
         GET /api/users/ - List all users
         POST /api/users/ - Create a new user

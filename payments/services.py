@@ -1,9 +1,17 @@
+# services.py
 from django.db import transaction
 from decimal import Decimal
 from .models import Account, Transaction, MassPayment, MassPaymentItem, BankProvider
 import logging
 
 logger = logging.getLogger(__name__)
+
+"""
+    The script processes mass payments consisting of multiple payment items.
+    It handles both internal transfers (between accounts in the system)
+    and external transfers (to accounts outside the system,likely using a bank API).
+    It ensures transactional integrity using Django’s transaction.atomic() to prevent inconsistent data states.
+"""
 
 class PaymentProcessor:
     @staticmethod

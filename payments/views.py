@@ -1,4 +1,6 @@
-from rest_framework import viewsets, status
+# views.py:
+import uuid
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.generics import ListAPIView
@@ -45,7 +47,10 @@ class BankProviderViewSet(viewsets.ModelViewSet):
     lookup_field = 'bank_code'
 
 
-class MassPaymentViewSet(viewsets.GenericViewSet):
+class MassPaymentViewSet(mixins.ListModelMixin, 
+                         mixins.CreateModelMixin,
+                         mixins.RetrieveModelMixin,
+                         viewsets.GenericViewSet):
     queryset = MassPayment.objects.all()
     
     def get_serializer_class(self):
@@ -93,25 +98,38 @@ class MassPaymentViewSet(viewsets.GenericViewSet):
         
         # Create the mass payment
         with transaction.atomic():
+            # Generate a reference code if none provided
+            if not reference:
+                reference = f"MP{uuid.uuid4().hex[:8].upper()}"
+            
             mass_payment = MassPayment.objects.create(
                 initiator_account=initiator_account,
                 total_amount=total_amount,
                 fee_amount=fee_amount,
                 status='processing',
                 description=description,
-                reference_code=reference if reference else None,
+                reference_code=reference,
                 pending_count=len(recipients)
             )
             
-            # Create payment items
+            # Create payment items and collect them for the response
+            payment_items = []
             for recipient in recipients:
-                MassPaymentItem.objects.create(
+                payment_item = MassPaymentItem.objects.create(
                     mass_payment=mass_payment,
                     destination_phone_number=recipient['phone_number'],
                     destination_bank_code=recipient['bank_code'],
                     amount=recipient['amount'],
                     fee_amount=fee_per_transaction
                 )
+                payment_items.append({
+                    "id": payment_item.id,
+                    "phone_number": payment_item.destination_phone_number,
+                    "bank_code": payment_item.destination_bank_code,
+                    "amount": payment_item.amount,
+                    "fee_amount": payment_item.fee_amount,
+                    "status": payment_item.status if hasattr(payment_item, 'status') else 'pending'
+                })
             
             # In a real system, you would start a background task to process these payments
             # For demonstration, we'll assume starting the process here
@@ -125,12 +143,15 @@ class MassPaymentViewSet(viewsets.GenericViewSet):
                 "created_at": mass_payment.created_at,
                 "recipients_count": len(recipients),
                 "external_recipients_count": sum(1 for r in recipients if r['bank_code'] != initiator_account.bank_code),
-                "estimated_completion_time": timezone.now() + timezone.timedelta(minutes=30)  # Example estimate
+                "estimated_completion_time": timezone.now() + timezone.timedelta(minutes=30),  # Example estimate
+                "recipients": payment_items  # Add the recipients to the response
             }
             
             return Response(response_data, status=status.HTTP_201_CREATED)
-    
+        
     def retrieve(self, request, pk=None):
         mass_payment = get_object_or_404(MassPayment, pk=pk)
         serializer = self.get_serializer(mass_payment)
         return Response(serializer.data)
+
+

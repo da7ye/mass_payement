@@ -1,3 +1,4 @@
+# serializers.py
 from rest_framework import serializers
 from .models import User, Account, BankProvider, Transaction, MassPayment, MassPaymentItem
 
@@ -90,4 +91,4 @@ class MassPaymentDetailSerializer(serializers.ModelSerializer):
     
     def get_contains_external_transfers(self, obj):
         bank_code = obj.initiator_account.bank_code
-        return obj.items.filter(destination_bank_code__ne=bank_code).exists()
+        return obj.items.filter(destination_bank_code=bank_code).exists()

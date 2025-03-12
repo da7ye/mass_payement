@@ -17,8 +17,7 @@ Microservice de Paiements de Masse pour Next.mr
 
 
 
-NOTES:
-    ---------------------------------------------------------1-----------------------------------------------------------------------------------------
+    NOTES:
     ?: in the 'GET /api/mass-payments/' showing the status as completed but int the 'POST /api/mass-payments/ RESPONSE' showing processing.
     RESPONSE:
         This is actually the expected behavior for an asynchronous process. The POST endpoint creates the job and returns immediately with the initial status, while the background task updates the status as it processes.
@@ -34,10 +33,9 @@ NOTES:
 
         The background thread had time to finish processing all payment items
         The database was updated with the final status.
-        ------------------------------------------------------2-----------------------------------------------------------------------------------------
 
 
-API ENDPOINTS:
+    API ENDPOINTS:
 
     User Endpoints:
         GET /api/users/ - List all users

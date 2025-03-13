@@ -171,7 +171,6 @@ class PaymentProcessor:
     def _process_external_transfer(payment_item, source_account):
         """
         Process transfer to external bank
-        In a real system, this would call the external bank's API
         """
         try:
             # Check if bank provider exists

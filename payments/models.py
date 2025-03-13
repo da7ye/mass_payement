@@ -97,7 +97,7 @@ class MassPaymentItem(models.Model):
     
     mass_payment = models.ForeignKey(MassPayment, on_delete=models.CASCADE, related_name='items')
     destination_phone_number = models.CharField(max_length=20)
-    destination_account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=True, related_name='incoming_mass_payments')
+    destination_account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, blank=False, related_name='incoming_mass_payments')
     destination_bank_code = models.CharField(max_length=10)
     amount = models.DecimalField(max_digits=15, decimal_places=2)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
@@ -107,3 +107,31 @@ class MassPaymentItem(models.Model):
     
     def __str__(self):
         return f"{self.destination_phone_number} - {self.amount} - {self.status}"
+    
+
+class PaymentTemplate(models.Model):
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE,null=True, related_name='payment_templates')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.name} - {self.owner}"
+
+    class Meta:
+        unique_together = ('name', 'owner')
+
+
+class TemplateRecipient(models.Model):
+    template = models.ForeignKey(PaymentTemplate, on_delete=models.CASCADE, related_name='recipients')
+    phone_number = models.CharField(max_length=20)
+    bank_code = models.CharField(max_length=10)
+    name = models.CharField(max_length=100, blank=True, null=True)
+    default_amount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.phone_number} - {self.template.name}"
+    
+    class Meta:
+        unique_together = ('template', 'phone_number', 'bank_code')

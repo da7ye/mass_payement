@@ -2,23 +2,23 @@
 Microservice de Paiements de Masse pour Next.mr
 
     TODO:
-    -> The recipients in the GET /api/mass-payments/ isnt showin
-    ->  Done but dont know how yet! (When doing a mass payment its no getting the ammount out of the initiator's account)
-    -> didnt do the payement templates yet!
+    -> the iniciator shouldnt be able to transfer money to his account
 
-    -> if you have time try using postgres instead of sqlite
 
     DONE:
     ->The status of the recipiants in the POST /api/mass-payments/ endpoint still say pending when it should be saying succeess
     -> There is a endpoint for mass payement GET /api/mass-payments/ but there isnt one for each MassPayment like GET /api/mass-payments/{id}/
     -> Liste des Paiements de Masse d'un Utilisateur GET /api/accounts/{account_number}/mass-payments
-
+    -> the 'success_count,failure_count,pendings_count' in the mass payment work but it should be indicating the reason why some of the transactions failed (they work but in "failure_reason" inside the GET /api/mass-payments/{id}/ endpoint)
+    -> it should say "No user found with the provided phone number." when the phone number is not does not belong to an active account.
+    -> didnt do the payement templates yet!
+    ->  Done but dont know how yet! (When doing a mass payment its no getting the ammount out of the initiator's account) reponses:145services
 
 
 
 
     NOTES:
-    ?: in the 'GET /api/mass-payments/' showing the status as completed but int the 'POST /api/mass-payments/ RESPONSE' showing processing.
+    ?: in the 'GET /api/mass-payments/' showing the status as completed but in the 'POST /api/mass-payments/ RESPONSE' showing processing.
     RESPONSE:
         This is actually the expected behavior for an asynchronous process. The POST endpoint creates the job and returns immediately with the initial status, while the background task updates the status as it processes.
 
@@ -38,12 +38,12 @@ Microservice de Paiements de Masse pour Next.mr
     API ENDPOINTS:
 
     User Endpoints:
-        GET /api/users/ - List all users
-        POST /api/users/ - Create a new user
-        GET /api/users/{id}/ - Retrieve a specific user
-        PUT /api/users/{id}/ - Update a user
-        PATCH /api/users/{id}/ - Partially update a user
-        DELETE /api/users/{id}/ - Delete a user
+    GET /api/users/ - List all users
+    POST /api/users/ - Create a new user
+    GET /api/users/{id}/ - Retrieve a specific user
+    PUT /api/users/{id}/ - Update a user
+    PATCH /api/users/{id}/ - Partially update a user
+    DELETE /api/users/{id}/ - Delete a user
 
     Account Endpoints:
     GET /api/accounts/ - List all accounts
@@ -66,3 +66,11 @@ Microservice de Paiements de Masse pour Next.mr
     GET /api/mass-payments/ - List all mass payments
     POST /api/mass-payments/ - Create a new mass payment
     GET /api/mass-payments/{id}/ - Retrieve details of a specific mass payment
+
+    Payment Templates Endpoints:
+    • POST /api/payment-templates - Créer un nouveau template de paiement
+    • GET /api/payment-templates - Lister tous les templates de paiement
+    • GET /api/payment-templates/{template_id} - Récupérer un template de paiement
+    spécifique
+    • PUT /api/payment-templates/{template_id} - Mettre à jour un template de paiement
+    • DELETE /api/payment-templates/{template_id} - Supprimer un template de paiement

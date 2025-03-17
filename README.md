@@ -161,6 +161,21 @@ http://localhost:8000/api/
 }
 ```
 
+📂 Exemple de fichier CSV pour l'importation des bénéficiaires
+Un fichier CSV peut être utilisé pour ajouter plusieurs bénéficiaires en une seule requête. Le format attendu est le suivant :
+
+csv
+Copier
+Modifier
+phone_number,bank_code,full_name,default_amount,motive
+1234567890,001,John Doe,100.00,Salaire
+0987654321,002,Jane Smith,150.00,Bonus
+1122334455,003,Robert Johnson,200.00,Paiement de services
+
+📥 Télécharger un exemple de fichier CSV
+Vous pouvez télécharger un fichier CSV d'exemple pour tester l'importation de bénéficiaires :
+[Télécharger le fichier CSV d'exemple](recipients.csv)
+
 
 
 

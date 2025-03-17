@@ -166,43 +166,29 @@ Vous pouvez télécharger un fichier CSV d'exemple pour tester l'importation de 
 
 
 
+## Autres endpoints de l'API
 
-    API ENDPOINTS:
+### Endpoints des utilisateurs
+- **GET** `/api/users/` - Lister tous les utilisateurs
+- **POST** `/api/users/` - Créer un nouvel utilisateur
+- **GET** `/api/users/{id}/` - Récupérer un utilisateur spécifique
+- **PUT** `/api/users/{id}/` - Mettre à jour un utilisateur
+- **PATCH** `/api/users/{id}/` - Mettre à jour partiellement un utilisateur
+- **DELETE** `/api/users/{id}/` - Supprimer un utilisateur
 
-    User Endpoints:
-    GET /api/users/ - List all users
-    POST /api/users/ - Create a new user
-    GET /api/users/{id}/ - Retrieve a specific user
-    PUT /api/users/{id}/ - Update a user
-    PATCH /api/users/{id}/ - Partially update a user
-    DELETE /api/users/{id}/ - Delete a user
+### Endpoints des comptes
+- **GET** `/api/accounts/` - Lister tous les comptes
+- **POST** `/api/accounts/` - Créer un nouveau compte
+- **GET** `/api/accounts/{account_number}/` - Récupérer un compte spécifique
+- **PUT** `/api/accounts/{account_number}/` - Mettre à jour un compte
+- **PATCH** `/api/accounts/{account_number}/` - Mettre à jour partiellement un compte
+- **DELETE** `/api/accounts/{account_number}/` - Supprimer un compte
+- **GET** `/api/accounts/{account_number}/mass_payments/` - Récupérer les paiements de masse d'un compte spécifique
 
-    Account Endpoints:
-    GET /api/accounts/ - List all accounts
-    POST /api/accounts/ - Create a new account
-    GET /api/accounts/{account_number}/ - Retrieve a specific account
-    PUT /api/accounts/{account_number}/ - Update an account
-    PATCH /api/accounts/{account_number}/ - Partially update an account
-    DELETE /api/accounts/{account_number}/ - Delete an account
-    GET /api/accounts/{account_number}/mass_payments/ - Get mass payments for a specific account
-
-    Bank Provider Endpoints:
-    GET /api/bank-providers/ - List all bank providers
-    POST /api/bank-providers/ - Create a new bank provider
-    GET /api/bank-providers/{bank_code}/ - Retrieve a specific bank provider
-    PUT /api/bank-providers/{bank_code}/ - Update a bank provider
-    PATCH /api/bank-providers/{bank_code}/ - Partially update a bank provider
-    DELETE /api/bank-providers/{bank_code}/ - Delete a bank provider
-
-    Mass Payment Endpoints
-    GET /api/mass-payments/ - List all mass payments
-    POST /api/mass-payments/ - Create a new mass payment
-    GET /api/mass-payments/{id}/ - Retrieve details of a specific mass payment
-
-    Payment Templates Endpoints:
-    • POST /api/payment-templates - Créer un nouveau template de paiement
-    • GET /api/payment-templates - Lister tous les templates de paiement
-    • GET /api/payment-templates/{template_id} - Récupérer un template de paiement
-    spécifique
-    • PUT /api/payment-templates/{template_id} - Mettre à jour un template de paiement
-    • DELETE /api/payment-templates/{template_id} - Supprimer un template de paiement
+### Endpoints des fournisseurs bancaires
+- **GET** `/api/bank-providers/` - Lister tous les fournisseurs bancaires
+- **POST** `/api/bank-providers/` - Créer un nouveau fournisseur bancaire
+- **GET** `/api/bank-providers/{bank_code}/` - Récupérer un fournisseur bancaire spécifique
+- **PUT** `/api/bank-providers/{bank_code}/` - Mettre à jour un fournisseur bancaire
+- **PATCH** `/api/bank-providers/{bank_code}/` - Mettre à jour partiellement un fournisseur bancaire
+- **DELETE** `/api/bank-providers/{bank_code}/` - Supprimer un fournisseur bancaire

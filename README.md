@@ -17,81 +17,8 @@ http://localhost:8000/api/
 
 ## Endpoints
 
-### 1. Endpoints des paiements de masse
 
-#### Lister tous les paiements de masse
-**GET** `/mass-payments/`
-
-
-#### Créer un paiement de masse
-**POST** `/mass-payments/`
-
-**Exemple de requête :**
-
-```json
-{
-  "initiator_account_number": "ACC001",
-  "recipients": [
-    {
-      "phone_number": "20593670",
-      "bank_code": "SEDAD",
-      "amount": 4500.00
-    },
-    {
-      "phone_number": "42563512",
-      "bank_code": "SEDAD",
-      "amount": 2500.00
-    }
-  ],
-  "description": "Salaire mensuel"
-}
-```
-
-#### Récupérer les détails d'un paiement de masse spécifique
-**GET** `/mass-payments/{id}/`
-
----
-
-### 2. Endpoints des modèles de paiement
-
-#### Créer un modèle de paiement
-**POST** `/payment-templates/`
-
-**Exemple de requête :**
-
-```json
-{
-  "name": "Template Salaire de Paiement mentielle",
-  "initiator_account_number": "ACC001",
-  "recipients": [
-    {
-      "phone_number": "1234567890",
-      "bank_code": "001",
-      "default_amount": "100.00"
-    },
-    {
-      "phone_number": "42563512",
-      "bank_code": "SEDAD",
-      "default_amount": 2500.00
-    }
-  ],
-  "description": "test Payments Template"
-}
-```
-
-#### Lister tous les modèles de paiement
-**GET** `/payment-templates/`
-
-#### Récupérer un modèle de paiement spécifique
-**GET** `/payment-templates/{template_id}/`
-
-
-#### Supprimer un modèle de paiement
-**DELETE** `/payment-templates/{template_id}/`
-
----
-
-### 3. Endpoints des groupes de bénéficiaires
+### 1. Endpoints des groupes de bénéficiaires
 
 #### Lister tous les groupes de bénéficiaires
 **GET** `/recipient-groups/`
@@ -163,6 +90,81 @@ phone_number,amount,motive
 ## 📥 Télécharger un exemple de fichier CSV
 Vous pouvez télécharger un fichier CSV d'exemple pour tester l'importation de bénéficiaires :
 [Télécharger le fichier CSV d'exemple](recipients.csv)
+
+---
+
+### 2. Endpoints des modèles de paiement
+
+#### Créer un modèle de paiement
+**POST** `/payment-templates/`
+
+**Exemple de requête :**
+
+```json
+{
+  "name": "Template Salaire de Paiement mentielle",
+  "initiator_account_number": "ACC001",
+  "recipients": [
+    {
+      "phone_number": "1234567890",
+      "bank_code": "001",
+      "default_amount": "100.00"
+    },
+    {
+      "phone_number": "42563512",
+      "bank_code": "SEDAD",
+      "default_amount": 2500.00
+    }
+  ],
+  "description": "test Payments Template"
+}
+```
+
+#### Lister tous les modèles de paiement
+**GET** `/payment-templates/`
+
+#### Récupérer un modèle de paiement spécifique
+**GET** `/payment-templates/{template_id}/`
+
+
+#### Supprimer un modèle de paiement
+**DELETE** `/payment-templates/{template_id}/`
+
+---
+
+
+### 3. Endpoints des paiements de masse
+
+#### Lister tous les paiements de masse
+**GET** `/mass-payments/`
+
+
+#### Créer un paiement de masse
+**POST** `/mass-payments/`
+
+**Exemple de requête :**
+
+```json
+{
+  "initiator_account_number": "ACC001",
+  "recipients": [
+    {
+      "phone_number": "20593670",
+      "bank_code": "SEDAD",
+      "amount": 4500.00
+    },
+    {
+      "phone_number": "42563512",
+      "bank_code": "SEDAD",
+      "amount": 2500.00
+    }
+  ],
+  "description": "Salaire mensuel"
+}
+```
+
+#### Récupérer les détails d'un paiement de masse spécifique
+**GET** `/mass-payments/{id}/`
 
 
 

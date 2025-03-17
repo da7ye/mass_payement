@@ -4,7 +4,6 @@ Microservice de Paiements de Masse pour Next.mr
     TODO:
     -> the iniciator shouldnt be able to transfer money to his account
 
-
     DONE:
     ->The status of the recipiants in the POST /api/mass-payments/ endpoint still say pending when it should be saying succeess
     -> There is a endpoint for mass payement GET /api/mass-payments/ but there isnt one for each MassPayment like GET /api/mass-payments/{id}/

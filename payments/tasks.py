@@ -1,5 +1,6 @@
 # tasks.py
-from .services import PaymentProcessor
+from .services.recipient_group_services import RecipientGroupProcessor
+from .services.mass_payement_services import PaymentProcessor
 import logging
 """
 What Does This Code Do?
@@ -20,3 +21,16 @@ def process_mass_payment(mass_payment_id):
         logger.info(f"Completed processing mass payment {mass_payment_id}")
     except Exception as e:
         logger.error(f"Error in background process for mass payment {mass_payment_id}: {str(e)}")
+
+def process_recipient_group(group_id):
+    """
+    Process a recipient group in the background.
+    """
+    try:
+        logger.info(f"Starting to process recipient group {group_id}")
+        # Add any background processing logic here if needed
+        RecipientGroupProcessor.process_group_recipients(group_id)
+
+        logger.info(f"Completed processing recipient group {group_id}")
+    except Exception as e:
+        logger.error(f"Error in background process for recipient group {group_id}: {str(e)}")

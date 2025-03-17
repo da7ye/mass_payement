@@ -1,17 +1,8 @@
-# services.py
 from django.db import transaction
-from decimal import Decimal
-from .models import Account, Transaction, MassPayment, MassPaymentItem, BankProvider
+from ..models import Account, GroupRecipient, RecipientGroup, Transaction, MassPayment, MassPaymentItem, BankProvider, User
 import logging
+from .services import logger
 
-logger = logging.getLogger(__name__)
-
-"""
-    The script processes mass payments consisting of multiple payment items.
-    It handles both internal transfers (between accounts in the system)
-    and external transfers (to accounts outside the system,likely using a bank API).
-    It ensures transactional integrity using Django’s transaction.atomic() to prevent inconsistent data states.
-"""
 
 class PaymentProcessor:
     @staticmethod
@@ -184,9 +175,6 @@ class PaymentProcessor:
                 payment_item.failure_reason = "Bank provider not supported"
                 payment_item.save()
                 return False
-            
-            # In a real system, you would make an API call to the bank_provider.api_endpoint
-            # For this example, we'll simulate a successful external transfer
             
             # Create transaction record
             transaction = Transaction.objects.create(

@@ -1,67 +1,20 @@
+from urllib import response
+from ..models import Account, MassPayment, MassPaymentItem, PaymentTemplate, User
+from ..serializers.mass_payments_serializers import (
+    MassPaymentListSerializer, MassPaymentDetailSerializer, MassPaymentCreateSerializer
+)
+from ..serializers.payment_template_views import (
+    CreateMassPaymentFromTemplateSerializer
+)
 import uuid
-from rest_framework import viewsets, status, mixins, permissions
+from rest_framework import viewsets, status, mixins
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.generics import ListAPIView
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 from django.utils import timezone
 from decimal import Decimal
 
-from .models import (
-    User, Account, BankProvider, Transaction, 
-    MassPayment, MassPaymentItem, PaymentTemplate, TemplateRecipient
-)
-from .serializers import (
-    UserSerializer, AccountSerializer, BankProviderSerializer,
-    TransactionSerializer, MassPaymentCreateSerializer,
-    MassPaymentListSerializer, MassPaymentDetailSerializer,
-    PaymentTemplateListSerializer, PaymentTemplateDetailSerializer,
-    PaymentTemplateCreateUpdateSerializer, CreateMassPaymentFromTemplateSerializer
-)
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-
-class AccountViewSet(viewsets.ModelViewSet):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-    lookup_field = 'account_number'
-    
-    @action(detail=True, methods=['get'])
-    def mass_payments(self, request, account_number=None):
-        account = self.get_object()
-        mass_payments = MassPayment.objects.filter(initiator_account=account).order_by('-created_at')
-        
-        page = self.paginate_queryset(mass_payments)
-        if page is not None:
-            serializer = MassPaymentListSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-            
-        serializer = MassPaymentListSerializer(mass_payments, many=True)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def payment_templates(self, request, account_number=None):
-        account = self.get_object()
-        templates = PaymentTemplate.objects.filter(owner=account.user).order_by('-created_at')
-        
-        page = self.paginate_queryset(templates)
-        if page is not None:
-            serializer = PaymentTemplateListSerializer(page, many=True)
-            return self.get_paginated_response(serializer.data)
-            
-        serializer = PaymentTemplateListSerializer(templates, many=True)
-        return Response(serializer.data)
-
-
-class BankProviderViewSet(viewsets.ModelViewSet):
-    queryset = BankProvider.objects.all()
-    serializer_class = BankProviderSerializer
-    lookup_field = 'bank_code'
 
 
 class MassPaymentViewSet(mixins.ListModelMixin, 
@@ -96,7 +49,7 @@ class MassPaymentViewSet(mixins.ListModelMixin,
                 is_blocked=False
             )
         except Account.DoesNotExist:
-            return Response(
+            return response(
                 {"error": "Initiator account not found or inactive"},
                 status=status.HTTP_400_BAD_REQUEST
             )
@@ -151,9 +104,6 @@ class MassPaymentViewSet(mixins.ListModelMixin,
                     "status": payment_item.status if hasattr(payment_item, 'status') else 'pending'
                 })
             
-            # In a real system, you would start a background task to process these payments
-            # For demonstration, we'll assume starting the process here
-            
             response_data = {
                 "mass_payment_id": mass_payment.id,
                 "reference_code": mass_payment.reference_code,
@@ -163,8 +113,8 @@ class MassPaymentViewSet(mixins.ListModelMixin,
                 "created_at": mass_payment.created_at,
                 "recipients_count": len(recipients),
                 "external_recipients_count": sum(1 for r in recipients if r['bank_code'] != initiator_account.bank_code),
-                "estimated_completion_time": timezone.now() + timezone.timedelta(minutes=30),  # Example estimate
-                "recipients": payment_items  # Add the recipients to the response
+                "estimated_completion_time": timezone.now() + timezone.timedelta(minutes=30),  
+                "recipients": payment_items  
             }
             
             return Response(response_data, status=status.HTTP_201_CREATED)
@@ -347,51 +297,3 @@ class MassPaymentViewSet(mixins.ListModelMixin,
             }
             
             return Response(response_data, status=status.HTTP_201_CREATED)
-
-
-class PaymentTemplateViewSet(viewsets.ModelViewSet):
-    queryset = PaymentTemplate.objects.all()
-    
-    def get_serializer_class(self):
-        if self.action in ['create', 'update', 'partial_update']:
-            return PaymentTemplateCreateUpdateSerializer
-        elif self.action == 'retrieve':
-            return PaymentTemplateDetailSerializer
-        return PaymentTemplateListSerializer
-    
-    def get_queryset(self):
-        # # Filter templates to only show those owned by the current user
-        # user = self.request.user
-        # if user.is_authenticated:
-        #     # Assuming you have authentication set up
-        #     # In a test environment, you might want to remove this filter
-        #     return PaymentTemplate.objects.filter(owner=user)
-        # return PaymentTemplate.objects.none()
-        
-        # for now, return all templates
-        return PaymentTemplate.objects.all()
-    
-    # def perform_create(self, serializer):
-    #     # Set the owner to the current user
-    #     serializer.save(owner=self.request.user)
-    
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
-        template = serializer.instance
-        
-        # Return the detail view of the created template
-        detail_serializer = PaymentTemplateDetailSerializer(template)
-        return Response(detail_serializer.data, status=status.HTTP_201_CREATED)
-    
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        
-        # Return the detail view of the updated template
-        detail_serializer = PaymentTemplateDetailSerializer(instance)
-        return Response(detail_serializer.data)

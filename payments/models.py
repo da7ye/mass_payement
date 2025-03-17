@@ -1,4 +1,3 @@
-# models.py
 from django.db import models
 import uuid
 from decimal import Decimal
@@ -135,3 +134,49 @@ class TemplateRecipient(models.Model):
     
     class Meta:
         unique_together = ('template', 'phone_number', 'bank_code')
+
+
+class RecipientGroup(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('processing', 'Processing'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+        ('partially_completed', 'Partially Completed'),
+    ]
+
+    name = models.CharField(max_length=100)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=True, related_name='recipient_groups') #for now the owner can be null
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+
+    def __str__(self):
+        return f"{self.name} - {self.owner}"
+
+    class Meta:
+        unique_together = ('name', 'owner')
+
+
+class GroupRecipient(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('validated', 'Validated'),
+        ('failed', 'Failed'),
+    ]
+
+    group = models.ForeignKey(RecipientGroup, on_delete=models.CASCADE, related_name='recipients')
+    phone_number = models.CharField(max_length=20)
+    bank_code = models.CharField(max_length=10)
+    full_name = models.CharField(max_length=200)  # Stores the full name when validated
+    default_amount = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    motive = models.CharField(max_length=255, blank=True, null=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    failure_reason = models.TextField(blank=True, null=True)
+    
+    def __str__(self):
+        return f"{self.full_name} ({self.phone_number}) - {self.group.name}"
+    
+    class Meta:
+        unique_together = ('group', 'phone_number', 'bank_code')

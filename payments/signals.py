@@ -1,8 +1,9 @@
+# signals.py:
 
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import MassPayment
-from .tasks import process_mass_payment
+from .models import MassPayment, RecipientGroup
+from .tasks import process_mass_payment, process_recipient_group
 import threading
 from django.db import transaction
 
@@ -22,6 +23,22 @@ def start_mass_payment_processing(sender, instance, created, **kwargs):
         transaction.on_commit(
             lambda: threading.Thread(
                 target=process_mass_payment, 
+                args=(instance.id,),
+                daemon=False
+            ).start()
+        )
+
+
+
+@receiver(post_save, sender=RecipientGroup)
+def start_recipient_group_processing(sender, instance, created, **kwargs):
+    """
+    Start processing a recipient group when it's created.
+    """
+    if created:
+        transaction.on_commit(
+            lambda: threading.Thread(
+                target=process_recipient_group, 
                 args=(instance.id,),
                 daemon=False
             ).start()

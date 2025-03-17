@@ -1,7 +1,5 @@
-# payments/admin.py
-
 from django.contrib import admin
-from .models import User, Account, BankProvider, Transaction, MassPayment, MassPaymentItem
+from .models import GroupRecipient, PaymentTemplate, RecipientGroup, TemplateRecipient, User, Account, BankProvider, Transaction, MassPayment, MassPaymentItem
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
@@ -49,3 +47,46 @@ class MassPaymentItemAdmin(admin.ModelAdmin):
     list_filter = ('status', 'destination_bank_code')
     search_fields = ('destination_phone_number', 'mass_payment__reference_code')
     raw_id_fields = ('mass_payment', 'transaction', 'destination_account')
+
+class TemplateRecipientInline(admin.TabularInline):
+    model = TemplateRecipient
+    extra = 1  # Number of empty forms to display
+    fields = ('phone_number', 'bank_code', 'name', 'default_amount', 'motive')
+    search_fields = ('phone_number', 'name')
+
+@admin.register(PaymentTemplate)
+class PaymentTemplateAdmin(admin.ModelAdmin):
+    list_display = ('name', 'is_active', 'created_at', 'updated_at')
+    list_filter = ('is_active',)
+    search_fields = ('name',)
+    date_hierarchy = 'created_at'
+    inlines = [TemplateRecipientInline]
+
+@admin.register(TemplateRecipient)
+class TemplateRecipientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'template', 'phone_number', 'bank_code', 'name', 'default_amount')
+    list_filter = ('bank_code',)
+    search_fields = ('phone_number', 'name', 'template__name')
+    raw_id_fields = ('template',)
+
+
+class GroupRecipientInline(admin.TabularInline):
+    model = GroupRecipient
+    extra = 1  # Number of empty forms to display
+    fields = ('phone_number', 'bank_code', 'full_name', 'default_amount', 'motive', 'status')
+    search_fields = ('phone_number', 'full_name')
+
+@admin.register(RecipientGroup)
+class RecipientGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'owner', 'is_active', 'status', 'created_at', 'updated_at')
+    list_filter = ('is_active', 'status')
+    search_fields = ('name', 'owner__phone_number')
+    date_hierarchy = 'created_at'
+    inlines = [GroupRecipientInline]
+
+@admin.register(GroupRecipient)
+class GroupRecipientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'group', 'phone_number', 'bank_code', 'full_name', 'default_amount', 'status')
+    list_filter = ('status', 'bank_code')
+    search_fields = ('phone_number', 'full_name', 'group__name')
+    raw_id_fields = ('group',)

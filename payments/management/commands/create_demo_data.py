@@ -1,5 +1,3 @@
-# payments/management/commands/create_demo_data.py
-
 from django.core.management.base import BaseCommand
 from payments.models import User, Account, BankProvider, Transaction
 from decimal import Decimal

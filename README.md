@@ -30,16 +30,20 @@ http://localhost:8000/api/
 
 ```json
 {
-  "initiator_account_number": "1234567890",
+  "initiator_account_number": "ACC001",
   "recipients": [
     {
-      "phone_number": "1234567890",
-      "bank_code": "001",
-      "amount": "100.00"
+      "phone_number": "20593670",
+      "bank_code": "SEDAD",
+      "amount": 4500.00
+    },
+    {
+      "phone_number": "42563512",
+      "bank_code": "SEDAD",
+      "amount": 2500.00
     }
   ],
-  "description": "Salaire mensuel",
-  "reference": "SALARY001"
+  "description": "Salaire mensuel"
 }
 ```
 
@@ -57,15 +61,21 @@ http://localhost:8000/api/
 
 ```json
 {
-  "name": "Template 1",
-  "is_active": true,
+  "name": "Template Salaire de Paiement mentielle",
+  "initiator_account_number": "ACC001",
   "recipients": [
     {
       "phone_number": "1234567890",
       "bank_code": "001",
       "default_amount": "100.00"
+    },
+    {
+      "phone_number": "42563512",
+      "bank_code": "SEDAD",
+      "default_amount": 2500.00
     }
-  ]
+  ],
+  "description": "test Payments Template"
 }
 ```
 
@@ -75,26 +85,6 @@ http://localhost:8000/api/
 #### Récupérer un modèle de paiement spécifique
 **GET** `/payment-templates/{template_id}/`
 
-
-
-#### Mettre à jour un modèle de paiement
-**PUT** `/payment-templates/{template_id}/`
-
-**Exemple de requête :**
-
-```json
-{
-  "name": "Template 1 Mis à jour",
-  "is_active": false,
-  "recipients": [
-    {
-      "phone_number": "1234567890",
-      "bank_code": "001",
-      "default_amount": "150.00"
-    }
-  ]
-}
-```
 
 #### Supprimer un modèle de paiement
 **DELETE** `/payment-templates/{template_id}/`
@@ -115,7 +105,6 @@ http://localhost:8000/api/
 ```json
 {
   "name": "Groupe 1",
-  "is_active": true
 }
 ```
 
@@ -130,10 +119,10 @@ http://localhost:8000/api/
 
 ```json
 {
-  "phone_number": "1234567890",
-  "bank_code": "001",
-  "default_amount": "100.00",
-  "motive": "Salaire"
+  "phone_number": "20593670",
+  "bank_code": "SEDAD",
+  "default_amount": "300.00",
+  "motive": "Salary"
 }
 ```
 
@@ -144,9 +133,8 @@ http://localhost:8000/api/
 
 ```json
 {
-  "initiator_account_number": "1234567890",
-  "description": "Salaire mensuel",
-  "reference": "SALARY001"
+  "initiator_account_number": "ACC002",
+  "description": "Mars Salary(test my code update)"
 }
 ```
 
@@ -167,10 +155,12 @@ Un fichier CSV peut être utilisé pour ajouter plusieurs bénéficiaires en une
 csv
 Copier
 Modifier
-phone_number,bank_code,full_name,default_amount,motive
-1234567890,001,John Doe,100.00,Salaire
-0987654321,002,Jane Smith,150.00,Bonus
-1122334455,003,Robert Johnson,200.00,Paiement de services
+phone_number,amount,motive
+20593670,12000.00,Salary
+42563512,5000.00
+26456565,500.00
+26594815,1500.00,Salaire
+
 
 📥 Télécharger un exemple de fichier CSV
 Vous pouvez télécharger un fichier CSV d'exemple pour tester l'importation de bénéficiaires :

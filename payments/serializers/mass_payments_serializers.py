@@ -79,15 +79,13 @@ class MassPaymentListSerializer(serializers.ModelSerializer):
 class MassPaymentDetailSerializer(serializers.ModelSerializer):
     items = MassPaymentItemDetailSerializer(many=True, read_only=True)
     initiator_account_number = serializers.SerializerMethodField()
-    contains_external_transfers = serializers.SerializerMethodField()
-    
+   
     class Meta:
         model = MassPayment
         fields = [
             'id', 'reference_code', 'initiator_account_number', 'status',
             'total_amount', 'fee_amount', 'success_count', 'failure_count',
-            'pending_count', 'created_at', 'updated_at', 'description',
-            'contains_external_transfers', 'items',
+            'pending_count', 'created_at', 'updated_at', 'description', 'items',
         ]
     
     def get_initiator_account_number(self, obj):

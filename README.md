@@ -160,7 +160,7 @@ phone_number,amount,motive
 26594815,1500.00,Salaire
 ```
 
-#### 📥 Télécharger un exemple de fichier CSV
+## 📥 Télécharger un exemple de fichier CSV
 Vous pouvez télécharger un fichier CSV d'exemple pour tester l'importation de bénéficiaires :
 [Télécharger le fichier CSV d'exemple](recipients.csv)
 

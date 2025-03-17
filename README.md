@@ -1,37 +1,83 @@
 # mass_payement
 Microservice de Paiements de Masse pour Next.mr
 
-    TODO:
-    -> the iniciator shouldnt be able to transfer money to his account
 
-    DONE:
-    ->The status of the recipiants in the POST /api/mass-payments/ endpoint still say pending when it should be saying succeess
-    -> There is a endpoint for mass payement GET /api/mass-payments/ but there isnt one for each MassPayment like GET /api/mass-payments/{id}/
-    -> Liste des Paiements de Masse d'un Utilisateur GET /api/accounts/{account_number}/mass-payments
-    -> the 'success_count,failure_count,pendings_count' in the mass payment work but it should be indicating the reason why some of the transactions failed (they work but in "failure_reason" inside the GET /api/mass-payments/{id}/ endpoint)
-    -> it should say "No user found with the provided phone number." when the phone number is not does not belong to an active account.
-    -> didnt do the payement templates yet!
-    ->  Done but dont know how yet! (When doing a mass payment its no getting the ammount out of the initiator's account) reponses:145services
+# Documentation de l'API de l'Application de Paiement de Masse
+
+Cette documentation se concentre sur les points d'accès de l'API et fournit des exemples JSON pour les tests.
+
+## URL de base
+Tous les points d'accès sont relatifs à l'URL de base :
+
+```
+http://localhost:8000/api/
+```
+
+## Points d'accès
+
+### 1. Groupes de Bénéficiaires
+
+#### Lister tous les groupes de bénéficiaires
+**GET** `/recipient-groups/`
+
+**Réponse :**
+```json
+[
+  {
+    "id": 1,
+    "name": "Groupe 1",
+    "is_active": true,
+    "created_at": "2023-10-01T12:00:00Z",
+    "recipient_count": 5,
+    "status": "complété"
+  }
+]
+```
+
+#### Créer un groupe de bénéficiaires
+**POST** `/recipient-groups/`
+
+**Requête :**
+```json
+{
+  "name": "Groupe 1",
+}
+```
+
+#### Récupérer un groupe de bénéficiaires
+**GET** `/recipient-groups/{id}/`
 
 
+#### Ajouter un bénéficiaire à un groupe
+**POST** `/recipient-groups/{id}/add_recipient/`
 
+**Requête :**
+```json
+{
+  "phone_number": "1234567890",
+  "bank_code": "001",
+  "default_amount": "100.00",
+  "motive": "Salaire"
+}
+```
 
-    NOTES:
-    ?: in the 'GET /api/mass-payments/' showing the status as completed but in the 'POST /api/mass-payments/ RESPONSE' showing processing.
-    RESPONSE:
-        This is actually the expected behavior for an asynchronous process. The POST endpoint creates the job and returns immediately with the initial status, while the background task updates the status as it processes.
+#### Créer un paiement de masse à partir d'un groupe
+**POST** `/recipient-groups/{id}/create_mass_payment/`
 
-        1.When you make a POST request to create a mass payment, the API returns a response immediately after creating the record, showing "status": "processing" because:
+**Requête :**
+```json
+{
+  "initiator_account_number": "1234567890",
+  "description": "Salaire mensuel",
+  "reference": "SALAIRE001"
+}
+```
 
-        The mass payment is created with initial status "pending"
-        The process_mass_payment starts processing in a background thread
-        The API response is returned before the background processing completes
+### 2. Paiements de Masse
 
+#### Lister tous les paiements de masse
+**GET** `/mass-payments/`
 
-        2.When you later make a GET request to view the mass payments, the processing has completed, so you see "status": "completed" because:
-
-        The background thread had time to finish processing all payment items
-        The database was updated with the final status.
 
 
     API ENDPOINTS:

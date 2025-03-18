@@ -1,5 +1,5 @@
 from ..models import PaymentTemplate
-from ..serializers.payment_template_views import (
+from ..serializers.payment_template_serializers import (
     PaymentTemplateListSerializer, PaymentTemplateCreateUpdateSerializer, PaymentTemplateDetailSerializer
 )
 from rest_framework import viewsets, status

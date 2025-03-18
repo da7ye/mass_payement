@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from ..serializers.payment_template_views import PaymentTemplateListSerializer
+from ..serializers.payment_template_serializers import PaymentTemplateListSerializer
 from ..models import (
     User, Account, BankProvider,
     MassPayment,PaymentTemplate,

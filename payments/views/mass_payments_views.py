@@ -3,7 +3,7 @@ from ..models import Account, MassPayment, MassPaymentItem, PaymentTemplate, Use
 from ..serializers.mass_payments_serializers import (
     MassPaymentListSerializer, MassPaymentDetailSerializer, MassPaymentCreateSerializer
 )
-from ..serializers.payment_template_views import (
+from ..serializers.payment_template_serializers import (
     CreateMassPaymentFromTemplateSerializer
 )
 import uuid
